@@ -5,8 +5,10 @@ REST API using Spring Data R2DBC.
 
 # Script
 
+## POST
+
 ```bash
-function reactivePostAsync() { 
+function reactiveAsyncPost() { 
   local URL="http://localhost:8090/async/books"
   POST_BODY=$(cat << EOF
   {
@@ -18,6 +20,29 @@ EOF
 )
 
   local RESPONSE=$(curl -sk "$URL" -X POST -H "Content-Type: application/json" -d "$POST_BODY")
+
+  echo "$RESPONSE" | jq empty
+  exit_status=$?
+
+  echo "\n=$URL=\n";
+  if [ $exit_status -eq 0 ]; then
+    echo "$RESPONSE" | python3 -m json.tool;
+  else 
+    echo "***Operation failed***"
+    curl -v "$URL"
+  fi
+
+  echo "\n==\n";
+}
+```
+
+## GET
+
+```bash
+function reactiveAsyncGet() { 
+  local URL="http://localhost:8090/async/books"
+  
+  local RESPONSE=$(curl -sk "$URL" -H "Content-Type: application/json")
 
   echo "$RESPONSE" | jq empty
   exit_status=$?
