@@ -1,4 +1,4 @@
-name: Build and Run Spring Boot App
+name: Run tests and build
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v2
 
     - name: Set up JDK
@@ -19,14 +19,15 @@ jobs:
         distribution: 'adopt'
         java-version: '20'
 
-    - name: Build with Maven
+    - name: Run tests
+      run: ./mvnw test
+
+    - name: Build
       run: |
         # Download and set up Maven
         mvn -N io.takari:maven:wrapper
         ./mvnw clean install
 
-    - name: Run Tests with Maven
-      run: ./mvnw test
 
     # - name: Run Spring Boot App
       # run: java -jar target/spring-boot-mysql-async-0.0.1-SNAPSHOT.jar
