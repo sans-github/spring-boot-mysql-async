@@ -1,0 +1,31 @@
+name: Publish README to GitHub Pages
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Pandoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+
+      - name: Convert README to HTML
+        run: pandoc README.md -o index.html
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "${{github.actor}}"
+          git config user.email "${{github.actor}}@users.noreply.github.com"
+          git checkout -b gh-pages
+          git add index.html
+          git commit -m "Publish README as HTML"
+          git push origin gh-pages
